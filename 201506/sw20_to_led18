@@ -1,0 +1,25 @@
+#!/bin/bash
+
+###/sys/class/gpioを文字列として変数dirに格納###
+dir=/sys/class/gpio
+
+###プログラムを終えるときに実行する関数###
+clean () {
+	echo 18 > $dir/unexport 
+	echo 20 > $dir/unexport 
+}
+
+###Ctrl+cをトラップしてcleanを実行させる###
+trap clean 2
+
+###valueファイルを使えるようにする###
+echo 18 > $dir/export
+echo out > $dir/gpio18/direction
+echo 20 > $dir/export 
+
+###0.1秒ずつスイッチの状態を読んで反転し、LEDに入力###
+while sleep 0.1 ; do
+	cat $dir/gpio20/value	|
+	###0を1、1を0に変換###
+	awk '{print ($1+1)%2}'	> $dir/gpio18/value
+done
