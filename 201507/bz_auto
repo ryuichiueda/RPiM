@@ -1,0 +1,9 @@
+#!/bin/bash
+
+awk '
+	FILENAME=="SCALE"{ t[$1] = $2 }
+	FILENAME!="SCALE"{
+		print t[$1];
+		system(sprintf("sleep %f",$2));
+    }
+' SCALE "$1" > /dev/rtbuzzer0

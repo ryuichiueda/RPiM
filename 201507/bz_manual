@@ -1,0 +1,5 @@
+#!/bin/bash
+
+while read s ; do
+	awk -v "t=$s" '$1==t{print $2}' SCALE > /dev/rtbuzzer0
+done
