@@ -1,0 +1,13 @@
+#!/bin/bash
+
+leave () {
+	echo 0 > /dev/rtbuzzer0
+	exit 0
+}
+
+###Ctrl+cをトラップしてexitを実行させる###
+trap leave 2
+
+while sleep 0.1 ; do
+	awk '{print $1}' /dev/rtlightsensor0 > /dev/rtbuzzer0
+done
