@@ -1,4 +1,3 @@
-###run.bashはrange_to_gzを少しいじったもの###
 #!/bin/bash
 
 trap 'exit 0' 1
