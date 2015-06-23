@@ -3,11 +3,8 @@
 cd /tmp/
 exec 2> ./init.log
 
-PI="Pi1B+"
-KERNEL=`uname -r`
-
 ### set the driver ###
-insmod /home/pi/RaspberryPiMouse/lib/$PI/$KERNEL/rtmouse.ko
+insmod /home/pi/RaspberryPiMouse/lib/Pi?B+/`uname -r`/rtmouse.ko
 sleep 1
 chmod 666 /dev/rt*
 
