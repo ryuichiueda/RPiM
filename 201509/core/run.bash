@@ -2,6 +2,7 @@
 
 trap 'exit 0' 1
 
-while sleep 0.1 ; do
-        mawk '{print $1}' /dev/rtlightsensor0 > /dev/rtbuzzer0
-done
+echo 100 > /dev/rtbuzzer0
+
+echo 400 > /dev/rtmotor_raw_l0
+echo 400 > /dev/rtmotor_raw_r0
