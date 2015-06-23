@@ -1,0 +1,4 @@
+#!/bin/bash
+
+awk -v "f=$1" 'BEGIN{ while(1){ getline < f; print; close(f)}}' |
+tr -dc '[[:print:]]\n'
