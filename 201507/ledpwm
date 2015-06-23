@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 # しつこくCtrl+cを打たないと止まらないかもしれません
 
 led0 = open('/dev/rtled0', 'a')
