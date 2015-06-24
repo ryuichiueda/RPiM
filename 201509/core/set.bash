@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 
-###低い音で鳴り続ける（モータ励磁の警告音）###
+###モータ励磁の警告音を出す###
 echo 100 > /dev/rtbuzzer0
+###モータ励磁###
 echo 1 > /dev/rtmotoren0
+###準備完了の合図###
 echo 1 > /dev/rtled1
