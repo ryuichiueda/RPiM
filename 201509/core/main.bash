@@ -2,24 +2,17 @@
 
 exec &> /tmp/main.bash.log
 core=$(dirname $0)
-
-wait_sw () {
-        set +xv
-        while grep -q 1 /dev/rtswitch0 ; do
-                sleep 0.1
-        done
-        while grep -q 0 /dev/rtswitch0 ; do
-                sleep 0.1
-        done
-        set -xv
-}
+util="$core/../../util"
 
 while true ; do
         $core/init.bash
-        wait_sw
+	$util/wait_sw_push 0
+	$util/wait_sw_unpush 0
         $core/set.bash
-        wait_sw
+	$util/wait_sw_push 0
+	$util/wait_sw_unpush 0
         $core/run.bash &
-        wait_sw
+	$util/wait_sw_push 0
+	$util/wait_sw_unpush 0
         killall -1 run.bash
 done
