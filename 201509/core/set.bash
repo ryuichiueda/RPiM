@@ -4,5 +4,3 @@
 echo 100 > /dev/rtbuzzer0
 ###モータ励磁###
 echo 1 > /dev/rtmotoren0
-###準備完了の合図###
-echo 1 > /dev/rtled1

@@ -2,10 +2,6 @@
 
 trap 'exit 0' 1
 
-###run.bash起動の合図###
-echo 0 > /dev/rtbuzzer0
-echo 1 > /dev/rtled2
-
 ###前進###
 echo 400 > /dev/rtmotor_raw_l0
 echo 400 > /dev/rtmotor_raw_r0
