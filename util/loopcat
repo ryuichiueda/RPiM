@@ -1,4 +1,13 @@
 #!/bin/bash
 
-awk -v "f=$1" 'BEGIN{ while(1){ getline < f; print; close(f)}}' |
+INTVL=0.1
+
+awk -v "f=$1" -v "i=$INTVL" 'BEGIN{
+	while(1){
+		system("sleep " i)
+		getline < f
+		print
+		close(f)
+	}
+}' |
 tr -dc '[[:print:]]\n'
