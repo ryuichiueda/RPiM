@@ -3,8 +3,7 @@
 trap 'exit 0' 1
 
 ###前進###
-echo 400 > /dev/rtmotor_raw_l0
-echo 400 > /dev/rtmotor_raw_r0
+echo 400 | tee /dev/rtmotor_raw_?0
 
 ###壁が近づくと止める処理###
 
@@ -17,5 +16,4 @@ while [ ! -s /tmp/warning ] ; do
 done
 
 ###止める###
-echo 0 > /dev/rtmotor_raw_l0
-echo 0 > /dev/rtmotor_raw_r0
+echo 0 > /dev/rtmotoren0

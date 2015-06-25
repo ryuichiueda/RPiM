@@ -5,24 +5,21 @@ trap 'exit 0' 1
 abort () {
 	###止める###
 	echo ABORT >&2
-	echo 0 > /dev/rtmotor_raw_l0 
-	echo 0 > /dev/rtmotor_raw_r0 
-	echo 0 | tee /dev/rtled? > /dev/null
+	echo 0 | tee /dev/rtmotoren0 /dev/rtled? 
 	exit 1
 }
 
 ###壁が近づくと止める処理###
 : > /tmp/warning
-while sleep 0.2 ; do
+while sleep 0.1 ; do
 	cat /dev/rtlightsensor0		|
-	awk '$1+$2+$3+$4>500{print "STOP"}' > /tmp/warning
+	awk '$1+$2+$3+$4>400{print "STOP"}' > /tmp/warning
 	[ -s /tmp/warning ] && abort
 done &
 
 ###前進###
-for c in 200 400 600 800 ; do
-	echo $c | tee /dev/rtmotor_raw_?0
-	sleep 1
-done 
+seq 1 20					|
+awk '{print $1*100;system("sleep 0.1")}'	|
+tee /dev/rtmotor_raw_?0 
 
 wait
