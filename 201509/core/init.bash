@@ -1,8 +1,7 @@
 #!/bin/bash -e
 
 ###LEDを消す###
-echo 0 > /dev/rtled1
-echo 0 > /dev/rtled2
+echo 0 | tee /dev/rtled? > /dev/null
 
 ###モータを止める###
 echo 0 > /dev/rtmotoren0
