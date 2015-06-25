@@ -4,8 +4,8 @@ trap 'exit 0' 1
 
 abort () {
 	###止める###
-	echo ABORT >&2
 	echo 0 | tee /dev/rtmotoren0 /dev/rtled? 
+	echo ABORT >&2
 	exit 1
 }
 
