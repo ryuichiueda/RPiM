@@ -1,0 +1,28 @@
+stop () {
+	echo 0 | tee /dev/rtmotor_raw_?0 > /dev/null
+}
+
+forward () {
+	echo "$1"				|
+	awk '{print ($1>0)?400:-400}'		|
+	tee /dev/rtmotor_raw_?0 > /dev/null
+
+	echo "$1"			|
+	sed 's/^-//'			|
+	awk '{print $1/(45*3.141592)}'	|
+	xargs sleep
+	stop
+}
+
+turn () {
+	echo "$1"				|
+	awk '{print ($1>0)?400:-400}'		|
+	tee /dev/rtmotor_raw_r0			|
+	awk '{print -1*$1}'	> /dev/rtmotor_raw_l0
+
+	echo "$1"			|
+	sed 's/^-//'			|
+	awk '{print $1*0.525/90}'	|
+	xargs sleep
+	stop
+}
