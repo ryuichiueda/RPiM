@@ -1,6 +1,6 @@
 #!/bin/bash -xv
 
-exec &> /tmp/main.bash.log
+exec &> /run/shm/main.bash.log
 core=$(dirname $0)
 util="$core/../../util"
 

@@ -24,3 +24,50 @@ turn () {
 
 	stop
 }
+
+forward_to_wall () {
+	echo 400 > "/dev/rtmotor_raw_r0";
+	echo 400 > "/dev/rtmotor_raw_l0";
+
+	while ! awk -v "th=$1" '$1+$2+$3+$4>th{print "1"}' < /dev/rtlightsensor0 | grep -q 1 ; do
+		sleep 0.2
+	done
+	stop
+}
+
+forward_to_wall_fether () {
+	echo 400 > "/dev/rtmotor_raw_r0";
+	echo 400 > "/dev/rtmotor_raw_l0";
+
+	while sleep 0.2 ; do
+		awk ' $1>1000{printf("Fr")} $2>1000{printf("R")}
+			$3>1000{printf("L")} $4>1000{printf("Fl")}
+			END{print ""}' < /dev/rtlightsensor0 > /run/shm/wall
+
+		[ "$(cat /run/shm/wall)" = "" ] || break
+	done
+
+	stop
+	cat /run/shm/wall
+}
+
+turn_avoid_wall () {
+	if [ "$1" = "R" ] ; then
+		echo -300 > "/dev/rtmotor_raw_r0";
+		echo  300 > "/dev/rtmotor_raw_l0";
+	else
+		echo  300 > "/dev/rtmotor_raw_r0";
+		echo -300 > "/dev/rtmotor_raw_l0";
+	fi
+
+	n=0
+	while ! awk '$1<400 && $4<400{print "1"}' < /dev/rtlightsensor0 | grep -q 1 ; do
+		sleep 0.2
+		n=$(( n + 1 ))
+		[ $n -gt 10 ] && break
+	done
+
+
+	stop
+}
+

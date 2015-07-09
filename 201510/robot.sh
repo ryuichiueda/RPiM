@@ -1,6 +1,6 @@
 #!/bin/sh -evx
 
-cd /tmp/
+cd /run/shm/
 exec 2> ./init.log
 
 ### set the driver ###
