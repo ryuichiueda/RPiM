@@ -13,39 +13,31 @@ turn () {
 
 curve_to_wall () {
 	tmp=/run/shm/$$
-	: > $tmp-sem
-	while [ ! -s $tmp-sem ] ; do
-		if [ "$1" = "R" ] ; then
-			echo 350 400 200 > /dev/rtmotor0
-		else
-			echo 400 350 200 > /dev/rtmotor0
-		fi
-		[ $(numsum -r /dev/rtlightsensor0) -gt 1000 ] && echo w > $tmp-sem &
+	: > $tmp-wall
+	while [ ! -s $tmp-wall ] ; do
+		echo 350 400 200 > /dev/rtmotor0
+		[ $(numsum -r /dev/rtlightsensor0) -gt 1000 ] && echo w > $tmp-wall &
 	done
 }
 
 avoid_wall () {
 	tmp=/run/shm/$$
-	: > $tmp-sem
-	while [ ! -s $tmp-sem ] ; do
-		if [ "$1" = "R" ] ; then
-			turn 15
-		else
-			turn -15
-		fi
-		[ $(awk '{print $1+$4}' /dev/rtlightsensor0) -lt 400 ] && echo ok > $tmp-sem &
+	: > $tmp-wall
+	while [ ! -s $tmp-wall ] ; do
+		turn 15
+		[ $(numsum -r /dev/rtlightsensor0) -gt 1000 ] && echo w > $tmp-wall &
 	done
 }
 
 to_wall_highspeed () {
 	tmp=/run/shm/$$
-	: > $tmp-sem
+	: > $tmp-wall
 	n=300
-	while [ ! -s $tmp-sem ] ; do
+	while [ ! -s $tmp-wall ] ; do
 		echo $n $n 200 > /dev/rtmotor0
 		[ $n -lt 1500 ] && n=$(( n + 100 ))
 
-		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-sem &
+		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-wall &
 	done
 
 	while [ $n -gt 400 ] ; do
