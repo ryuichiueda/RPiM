@@ -1,1 +1,1 @@
-../run.test2.bash
+../run.2.bash

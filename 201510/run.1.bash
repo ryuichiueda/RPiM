@@ -1,7 +1,8 @@
 #!/bin/bash -xv
 
-source "$(dirname $0)/../util/actions"
+source "$(dirname $(readlink -f $0))/actions"
 
-echo 300 | tee /dev/rtmotor_raw_?0 > /dev/null
-sleep 3
-stop
+for n in 500 -500 500 -500 ; do
+	forward $n
+	sleep 0.5
+done
