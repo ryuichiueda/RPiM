@@ -16,12 +16,13 @@ curve_to_wall () {
 	: > $tmp-sem
 	while [ ! -s $tmp-sem ] ; do
 		if [ "$1" = "R" ] ; then
-			echo 350 400 200 > /dev/rtmotor0
+			echo 450 500 300 > /dev/rtmotor0
 		else
-			echo 400 350 200 > /dev/rtmotor0
+			echo 500 450 300 > /dev/rtmotor0
 		fi
-		[ $(numsum -r /dev/rtlightsensor0) -gt 1000 ] && echo w > $tmp-sem &
+		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-sem &
 	done
+	rm $tmp-*
 }
 
 avoid_wall () {
@@ -33,8 +34,9 @@ avoid_wall () {
 		else
 			turn -15
 		fi
-		[ $(awk '{print $1+$4}' /dev/rtlightsensor0) -lt 400 ] && echo ok > $tmp-sem &
+		[ $(awk '{print $1+$4}' < /dev/rtlightsensor0) -lt 200 ] && echo ok > $tmp-sem &
 	done
+	rm $tmp-*
 }
 
 to_wall_highspeed () {
@@ -52,4 +54,5 @@ to_wall_highspeed () {
 		n=$(( n - 200 ))
 		echo $n $n 50 > /dev/rtmotor0
 	done
+	rm $tmp-*
 }
