@@ -1,4 +1,4 @@
-tmp=/tmp/$$
+tmp=/run/shm/$$
 
 forward () {
 	#rtmotor0に入力する周波数と時間を作る
@@ -16,22 +16,32 @@ turn () {
 curve_to_wall () {
 	: > $tmp-a
 	while [ ! -s $tmp-a ] ; do
-		[ "$1" = "R" ] &&
-		echo 450 500 300 > /dev/rtmotor0 ||
-		echo 500 450 300 > /dev/rtmotor0
+		awk '$1+$2+$3+$4>500' /dev/rtlightsensor0 > $tmp-a
+		sleep 0.1
+	done &
 
-		awk '$1+$2+$3+$4>500' /dev/rtlightsensor0 > $tmp-a &
+	while [ ! -s $tmp-a ] ; do
+		[ "$1" = "R" ] &&
+		echo 450 500 100 > /dev/rtmotor0 ||
+		echo 500 450 100 > /dev/rtmotor0
 	done
+	wait
 	rm $tmp-*
 }
 
 search_space () {
 	: > $tmp-a
 	while [ ! -s $tmp-a ] ; do
-		[ "$1" = "R" ] && turn 15 || turn -15
+		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-a 
+		sleep 0.1
+	done &
 
-		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-a &
+	while [ ! -s $tmp-a ] ; do
+		[ "$1" = "R" ] &&
+		echo -400 400 100 > /dev/rtmotor0 ||
+		echo 400 -400 100 > /dev/rtmotor0
 	done
+	wait
 	rm $tmp-*
 }
 
