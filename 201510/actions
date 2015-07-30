@@ -18,17 +18,19 @@ curve_to_wall () {
 		[ "$1" = "R" ] &&
 		echo 450 500 300 > /dev/rtmotor0 ||
 		echo 500 450 300 > /dev/rtmotor0
-		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-sem &
+
+		awk '{a=$1+$2+$3+$4}a>500{print "w"}' /dev/rtlightsensor0 > $tmp-sem &
 	done
 	rm $tmp-*
 }
 
-avoid_wall () {
+search_space () {
 	tmp=/run/shm/$$
 	: > $tmp-sem
 	while [ ! -s $tmp-sem ] ; do
 		[ "$1" = "R" ] && turn 15 || turn -15
-		[ $(awk '{print $1+$4}' < /dev/rtlightsensor0) -lt 200 ] && echo ok > $tmp-sem &
+
+		awk '{a=$1+$4}a<200{print "w"}' /dev/rtlightsensor0 > $tmp-sem &
 	done
 	rm $tmp-*
 }
