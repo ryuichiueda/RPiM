@@ -1,3 +1,5 @@
+tmp=/tmp/$$
+
 forward () {
 	#rtmotor0に入力する周波数と時間を作る
 	#左右に曲がる場合には周波数を加減して調節を
@@ -12,38 +14,36 @@ turn () {
 }
 
 curve_to_wall () {
-	tmp=/run/shm/$$
-	: > $tmp-sem
-	while [ ! -s $tmp-sem ] ; do
+	: > $tmp-a
+	while [ ! -s $tmp-a ] ; do
 		[ "$1" = "R" ] &&
 		echo 450 500 300 > /dev/rtmotor0 ||
 		echo 500 450 300 > /dev/rtmotor0
 
-		awk '{a=$1+$2+$3+$4}a>500{print "w"}' /dev/rtlightsensor0 > $tmp-sem &
+		awk '$1+$2+$3+$4>500' /dev/rtlightsensor0 > $tmp-a &
 	done
 	rm $tmp-*
 }
 
 search_space () {
-	tmp=/run/shm/$$
-	: > $tmp-sem
-	while [ ! -s $tmp-sem ] ; do
+	: > $tmp-a
+	while [ ! -s $tmp-a ] ; do
 		[ "$1" = "R" ] && turn 15 || turn -15
 
-		awk '{a=$1+$4}a<200{print "w"}' /dev/rtlightsensor0 > $tmp-sem &
+		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-a &
 	done
 	rm $tmp-*
 }
 
 to_wall_highspeed () {
 	tmp=/run/shm/$$
-	: > $tmp-sem
+	: > $tmp-a
 	n=300
-	while [ ! -s $tmp-sem ] ; do
+	while [ ! -s $tmp-a ] ; do
 		echo $n $n 200 > /dev/rtmotor0
 		[ $n -lt 1500 ] && n=$(( n + 100 ))
 
-		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-sem &
+		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-a &
 	done
 
 	while [ $n -gt 400 ] ; do
