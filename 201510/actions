@@ -15,11 +15,9 @@ curve_to_wall () {
 	tmp=/run/shm/$$
 	: > $tmp-sem
 	while [ ! -s $tmp-sem ] ; do
-		if [ "$1" = "R" ] ; then
-			echo 450 500 300 > /dev/rtmotor0
-		else
-			echo 500 450 300 > /dev/rtmotor0
-		fi
+		[ "$1" = "R" ] &&
+		echo 450 500 300 > /dev/rtmotor0 ||
+		echo 500 450 300 > /dev/rtmotor0
 		[ $(numsum -r < /dev/rtlightsensor0) -gt 500 ] && echo w > $tmp-sem &
 	done
 	rm $tmp-*
@@ -29,11 +27,7 @@ avoid_wall () {
 	tmp=/run/shm/$$
 	: > $tmp-sem
 	while [ ! -s $tmp-sem ] ; do
-		if [ "$1" = "R" ] ; then
-			turn 15
-		else
-			turn -15
-		fi
+		[ "$1" = "R" ] && turn 15 || turn -15
 		[ $(awk '{print $1+$4}' < /dev/rtlightsensor0) -lt 200 ] && echo ok > $tmp-sem &
 	done
 	rm $tmp-*
