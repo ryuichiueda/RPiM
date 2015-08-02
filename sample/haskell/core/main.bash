@@ -2,7 +2,7 @@
 
 exec &> /run/shm/main.bash.log
 core=$(dirname $0)
-util="$core/../../util"
+util="$core/../../../util"
 
 while true ; do
 	###init###

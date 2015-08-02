@@ -9,5 +9,5 @@ sleep 1
 chmod 666 /dev/rt*
 
 ### run the main script ###
-chmod a+x /home/pi/RPiM/haskell_sample/core/main.bash
-sudo -u pi /home/pi/RPiM/haskell_sample/core/main.bash > /dev/null 2> /dev/null &
+chmod a+x /home/pi/RPiM/sample/haskell/core/main.bash
+sudo -u pi /home/pi/RPiM/sample/haskell/core/main.bash > /dev/null 2> /dev/null &
