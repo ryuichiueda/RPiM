@@ -22,27 +22,27 @@ curve_to_wall () {
 
 	while [ ! -s $tmp-curve_to_wall_sem ] ; do
 		[ "$1" = "R" ] &&
-		echo 450 500 100 > /dev/rtmotor0 ||
-		echo 500 450 100 > /dev/rtmotor0
+		echo 500 450 100 > /dev/rtmotor0 ||
+		echo 450 500 100 > /dev/rtmotor0
 	done
 	wait
 	rm $tmp-curve_to_wall_sem
 }
 
 search_space () {
-	: > $tmp-serarch_space_sem
-	while [ ! -s $tmp-serarch_space_sem ] ; do
-		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-serarch_space_sem
+	: > $tmp-search_space_sem
+	while [ ! -s $tmp-search_space_sem ] ; do
+		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-search_space_sem
 		sleep 0.1
 	done &
 
-	while [ ! -s $tmp-serarch_space_sem ] ; do ] ; do
+	while [ ! -s $tmp-search_space_sem ] ; do
 		[ "$1" = "R" ] &&
-		echo -400 400 100 > /dev/rtmotor0 ||
-		echo 400 -400 100 > /dev/rtmotor0
+		echo 400 -400 100 > /dev/rtmotor0 ||
+		echo -400 400 100 > /dev/rtmotor0
 	done
 	wait
-	rm $tmp-serarch_space_sem
+	rm $tmp-search_space_sem
 }
 
 to_wall_highspeed () {

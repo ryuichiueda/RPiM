@@ -9,7 +9,7 @@ g_sensor_values = [0,0,0,0]
 
 def motor(l_hz,r_hz,msec):
 	f = open("/dev/rtmotor0","w")
-	print >> f, "%d %d %d" % (r_hz,l_hz,msec)
+	print >> f, "%d %d %d" % (l_hz,r_hz,msec)
 	f.close()
 
 def lightsensorLock():
