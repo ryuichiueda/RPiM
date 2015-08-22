@@ -6,41 +6,11 @@ forward () {
 	awk '{print 410,395,int(1000*$1/(45*3.141592))}' <<< $1	|
 	#時間が負なら周波数も負にする
 	awk '$3>=0{print}$3<0{print -$1,-$2,-$3}' > /dev/rtmotor0
+	echo forward "$1"
 }
 
 turn () {
 	awk '{print -400,400,int(1000*$1/180)}' <<< $1	|
 	awk '$3>=0{print}$3<0{print -$1,-$2,-$3}' > /dev/rtmotor0
-}
-
-curve_to_wall () {
-	: > $tmp-curve_to_wall_sem
-	while [ ! -s $tmp-curve_to_wall_sem ] ; do
-		awk '$1+$2+$3+$4>500' /dev/rtlightsensor0 > $tmp-curve_to_wall_sem
-		sleep 0.1
-	done &
-
-	while [ ! -s $tmp-curve_to_wall_sem ] ; do
-		[ "$1" = "R" ] &&
-		echo 500 450 100 > /dev/rtmotor0 ||
-		echo 450 500 100 > /dev/rtmotor0
-	done
-	wait
-	rm $tmp-curve_to_wall_sem
-}
-
-search_space () {
-	: > $tmp-search_space_sem
-	while [ ! -s $tmp-search_space_sem ] ; do
-		awk '$1+$4<200' /dev/rtlightsensor0 > $tmp-search_space_sem
-		sleep 0.1
-	done &
-
-	while [ ! -s $tmp-search_space_sem ] ; do
-		[ "$1" = "R" ] &&
-		echo 400 -400 100 > /dev/rtmotor0 ||
-		echo -400 400 100 > /dev/rtmotor0
-	done
-	wait
-	rm $tmp-search_space_sem
+	echo turn "$1"
 }
