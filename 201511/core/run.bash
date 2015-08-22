@@ -1,1 +1,1 @@
-../run.1.bash
+../run.bash
