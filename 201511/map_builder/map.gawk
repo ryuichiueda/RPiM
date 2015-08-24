@@ -1,4 +1,4 @@
-#!/usr/local/bin/gawk -f 
+#!/usr/bin/gawk -f 
 
 function distance(v){
 	if(v < 500)	return -1;
